@@ -1,11 +1,8 @@
-# Temporäres Vorschau-Deployment auf GitHub Pages.
-# URL: https://bxmbi10.github.io/webkrk/
-# Zum Abschalten: Workflow-Datei entfernen oder Pages in den Repo-Settings deaktivieren.
+# Nimmt die Pages-Vorschau offline: deployed nur noch eine leere Hinweisseite.
+# Diese Datei wird nach dem Offline-Deploy entfernt.
 name: Deploy preview to GitHub Pages
 
 on:
-  push:
-    branches: [claude/kurok-architecture-site-ishdb6]
   workflow_dispatch:
 
 permissions:
@@ -24,29 +21,24 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
-
-      - run: npm ci
-
-      # --base, weil Pages unter /webkrk/ statt / ausliefert
-      - run: npm run build -- --base=/webkrk/
-
-      # SPA-Fallback: Pages liefert 404.html für unbekannte Pfade,
-      # danach übernimmt der Client-Router
-      - run: cp dist/index.html dist/404.html
+      - run: |
+          mkdir -p site
+          cat > site/index.html <<'HTML'
+          <!doctype html>
+          <html lang="de">
+            <head><meta charset="utf-8"><title>Vorschau beendet</title></head>
+            <body style="font-family: system-ui; display: grid; place-items: center; min-height: 100vh; margin: 0;">
+              <p>Diese Vorschau ist nicht mehr verfügbar.</p>
+            </body>
+          </html>
+          HTML
+          cp site/index.html site/404.html
 
       - uses: actions/configure-pages@v5
-        with:
-          enablement: true
 
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: dist
+          path: site
 
       - id: deployment
         uses: actions/deploy-pages@v4
