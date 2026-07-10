@@ -1,0 +1,149 @@
+@import '@fontsource-variable/inter';
+@import '@fontsource-variable/space-grotesk';
+@import 'tailwindcss';
+
+/* ---------------------------------------------------------------------------
+   Design-Tokens · Architekturbüro Kurok
+   ---------------------------------------------------------------------------
+   Farbwelt: helles Off-White als Basis, Anthrazit ("ink") für Typografie,
+   ein warmer Terrakotta-Ton als Akzent.
+
+   Alternative Akzent-Sets (bei Bedarf einfach die drei --color-accent-*
+   Werte unten austauschen):
+
+   Tiefblau:    accent #1f4e79 · accent-strong #163a5b · accent-soft #e8eef5
+   Moosgrün:    accent #4a5d3a · accent-strong #38472c · accent-soft #ecefe7
+--------------------------------------------------------------------------- */
+@theme {
+  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Space Grotesk Variable', 'Inter Variable', ui-sans-serif, sans-serif;
+
+  --color-paper: #faf7f2;
+  --color-paper-dim: #f2ede4;
+  --color-ink: #1d1c1a;
+  --color-ink-soft: #52504b;
+  --color-ink-faint: #8a867e;
+  --color-line: #e2dcd1;
+
+  --color-accent: #c65d34;
+  --color-accent-strong: #a8451f;
+  --color-accent-soft: #f6e8e0;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --animate-marquee: marquee 40s linear infinite;
+
+  @keyframes marquee {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+body {
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: clip;
+}
+
+::selection {
+  background-color: var(--color-accent);
+  color: var(--color-paper);
+}
+
+/* Sichtbarer Tastatur-Fokus */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Skip-Link für Tastaturnutzer */
+.skip-link {
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 100;
+  transform: translateY(-300%);
+  background: var(--color-ink);
+  color: var(--color-paper);
+  padding: 0.6rem 1.1rem;
+  border-radius: 999px;
+  font-size: 0.875rem;
+  transition: transform 0.2s ease;
+}
+.skip-link:focus-visible {
+  transform: translateY(0);
+}
+
+/* Große Display-Headlines */
+.headline {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.02;
+  text-wrap: balance;
+}
+
+/* Overline-Labels ("Kicker") */
+.kicker {
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+
+/* Dezente Hintergrund-Blaupausenlinien für Platzhalterflächen */
+.blueprint {
+  background-image:
+    repeating-linear-gradient(
+      45deg,
+      transparent 0,
+      transparent 14px,
+      color-mix(in srgb, var(--color-ink) 6%, transparent) 14px,
+      color-mix(in srgb, var(--color-ink) 6%, transparent) 15px
+    );
+}
+
+/* Unterstreichungs-Animation für Textlinks */
+.link-underline {
+  position: relative;
+}
+.link-underline::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  height: 1.5px;
+  width: 100%;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.35s var(--ease-out-expo);
+}
+.link-underline:hover::after,
+.link-underline:focus-visible::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .link-underline::after {
+    transition: none;
+  }
+}
